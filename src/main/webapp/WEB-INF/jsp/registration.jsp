@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,15 +14,15 @@
             <div class="regbox box">
                 <img class="avatar" src="img/collaboration.png">
                 <h1>Register Account</h1>
-                <form action="RegisterServlet" method="post">
+                <form action="Controller" method="post">
                     <p>Username</p>
                     <input type="text" placeholder="Username" name="name" required>
                     <p>Useremail</p>
                     <input type="text" placeholder="Useremail" name="email" required>
                     <p>Password</p>
                     <input type="password" placeholder="Password" name="password" required>
-                    <input type="submit" value="Register">
-                    <a href="index.jsp">Already have Account?</a>
+                    <input formaction="Controller?command=savenewuser" type="submit" value="Register">
+                    <a href="../../index.jsp">Already have Account?</a>
                 </form>
             </div>
 

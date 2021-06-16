@@ -19,12 +19,12 @@ public class ConnectionPool {
     private String password;
     private int poolSize;
 
-    private ConnectionPool(){
+    ConnectionPool(){
         DBResourceManager dbResourceManager = DBResourceManager.getInstance();
         this.driverName = dbResourceManager.getValue(DBParameter.DB_DRIVER);
         this.url = dbResourceManager.getValue(DBParameter.DB_URL);
         this.user = dbResourceManager.getValue(DBParameter.DB_USER);
-        this.password = dbResourceManager.getValue(DBParameter.DB_PASSWORD);
+        this.password = "";
         try{
             this.poolSize = Integer.parseInt(dbResourceManager
                     .getValue(DBParameter.DB_POOL_SIZE));
@@ -66,6 +66,17 @@ public class ConnectionPool {
         } catch (SQLException e){
             //logger.log(Level.ERROR, "Error closing the connection", e);
         }
+    }
+
+    public Connection takeConnection() throws ConnectionPoolException{
+        Connection connection = null;
+        try{
+            connection = connectionQueue.take();
+            givenAwayConQueue.add(connection);
+        } catch (InterruptedException e) {
+            throw new ConnectionPoolException("Error connecting to the data source.", e);
+        }
+        return connection;
     }
 
     public void closeConnectionsQueue(Connection con, Statement st, ResultSet rs){

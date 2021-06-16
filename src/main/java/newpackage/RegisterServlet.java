@@ -1,5 +1,9 @@
 package newpackage;
 
+import by.epam.dao.DAOException;
+import by.epam.dao.UserDAO;
+import by.epam.dao.impl.UserDAOimpl;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -36,21 +40,26 @@ public class RegisterServlet extends HttpServlet {
             String email = request.getParameter("email");
             String password = request.getParameter("password");
             //make user object
-            User userModel = new User(name, email, password);
+            by.epam.bean.User userModel = new by.epam.bean.User(name, email, password);
 
             //create database model
-            UserDatabase regUser = new UserDatabase(ConnectionPro.getConnection());
-            if (regUser.saveUser(userModel)) {
+            UserDAOimpl userDAO = new UserDAOimpl();
+            if(userDAO.registration(userModel)){
                 response.sendRedirect("index.jsp");
+           // UserDatabase regUser = new UserDatabase(ConnectionPro.getConnection());
+            //if (regUser.saveUser(userModel)) {
+           //     response.sendRedirect("index.jsp");
             } else {
                 String errorMessage = "User Available";
                 HttpSession regSession = request.getSession();
                 regSession.setAttribute("RegError", errorMessage);
-                response.sendRedirect("registration.jsp");
+                response.sendRedirect("index.jsp");
             }
             
             out.println("</body>");
             out.println("</html>");
+        } catch (DAOException e) {
+            e.printStackTrace();
         }
     }
 
